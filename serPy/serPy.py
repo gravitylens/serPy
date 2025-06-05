@@ -3,6 +3,9 @@ import numpy as np
 from datetime import datetime, timedelta
 from PIL import Image
 import cv2
+import logging
+
+logger = logging.getLogger(__name__)
 
 # Mapping of color_id to OpenCV Bayer conversion codes
 BAYER_CONVERSION_CODES = {
@@ -43,13 +46,31 @@ def save_frame_as_png(frame, output_path, color_id, align_rgb=True):
 
         # Align Blue to Green
         warp_matrix = np.eye(2, 3, dtype=np.float32)
-        _, warp_matrix = cv2.findTransformECC(g, b, warp_matrix, warp_mode, criteria)
-        b_aligned = cv2.warpAffine(b, warp_matrix, (g.shape[1], g.shape[0]), flags=cv2.INTER_LINEAR + cv2.WARP_INVERSE_MAP)
+        try:
+            _, warp_matrix = cv2.findTransformECC(g, b, warp_matrix, warp_mode, criteria)
+            b_aligned = cv2.warpAffine(
+                b,
+                warp_matrix,
+                (g.shape[1], g.shape[0]),
+                flags=cv2.INTER_LINEAR + cv2.WARP_INVERSE_MAP,
+            )
+        except cv2.error as e:
+            logger.warning("Blue channel alignment failed: %s", e)
+            b_aligned = b
 
         # Align Red to Green
         warp_matrix = np.eye(2, 3, dtype=np.float32)
-        _, warp_matrix = cv2.findTransformECC(g, r, warp_matrix, warp_mode, criteria)
-        r_aligned = cv2.warpAffine(r, warp_matrix, (g.shape[1], g.shape[0]), flags=cv2.INTER_LINEAR + cv2.WARP_INVERSE_MAP)
+        try:
+            _, warp_matrix = cv2.findTransformECC(g, r, warp_matrix, warp_mode, criteria)
+            r_aligned = cv2.warpAffine(
+                r,
+                warp_matrix,
+                (g.shape[1], g.shape[0]),
+                flags=cv2.INTER_LINEAR + cv2.WARP_INVERSE_MAP,
+            )
+        except cv2.error as e:
+            logger.warning("Red channel alignment failed: %s", e)
+            r_aligned = r
 
         # Merge aligned channels back into an RGB image
         debayered_frame = cv2.merge([b_aligned, g, r_aligned])
