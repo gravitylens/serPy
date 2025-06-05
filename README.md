@@ -72,3 +72,6 @@ These functions work together to:
 3. Save frames as PNG images.
 4. Convert timestamps to human-readable formats.
 5. Write `.ser` files with the desired frames, metadata, and timestamps.
+
+See `examples/extract_frames_example.py` for a walkthrough of selecting a
+subset of frames from an existing SER file and saving them to a new file.

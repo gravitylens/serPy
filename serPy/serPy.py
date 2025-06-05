@@ -244,19 +244,3 @@ def read_ser(input_path):
             timestamps = None
 
     return metadata, frames, timestamps
-"""
-# Example: Extract and save specific frames
-metadata, frames, timestamps = read_ser("TestImages/jup.ser")
-selected_frames = frames[10:20]
-selected_timestamps = timestamps[10:20] if timestamps else None
-metadata["frame_count"]=len(selected_frames)
-
-write_ser(
-    "output.ser",
-    metadata,
-    selected_frames,
-    selected_timestamps
-)
-
-save_frame_as_png(frames[0],"test.png",metadata["color_id"])
-"""
