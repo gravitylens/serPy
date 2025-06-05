@@ -222,8 +222,12 @@ def read_ser(input_path):
             raise ValueError("Invalid SER file: Incorrect File ID.")
 
         # Prepare metadata
+        # Helper to decode fixed-width string fields without trailing null bytes
+        def _decode_field(value: bytes) -> str:
+            return value.decode("utf-8").rstrip("\x00").strip()
+
         metadata = {
-            "file_id": file_id.decode("utf-8").strip(),
+            "file_id": _decode_field(file_id),
             "lu_id": lu_id,
             "color_id": color_id,
             "little_endian": bool(little_endian),
@@ -231,9 +235,9 @@ def read_ser(input_path):
             "image_height": image_height,
             "pixel_depth": pixel_depth,
             "frame_count": frame_count,
-            "observer": observer.decode("utf-8").strip(),
-            "instrument": instrument.decode("utf-8").strip(),
-            "telescope": telescope.decode("utf-8").strip(),
+            "observer": _decode_field(observer),
+            "instrument": _decode_field(instrument),
+            "telescope": _decode_field(telescope),
             "date_time": struct.unpack("<Q", date_time)[0],
             "date_time_utc": struct.unpack("<Q", date_time_utc)[0],
         }
