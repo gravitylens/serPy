@@ -37,17 +37,19 @@ Writes an SER file using the provided metadata, frames, and optional timestamps.
 
 ---
 
-#### **`save_frame_as_png(frame, output_path)`**
-Saves a single frame as a PNG image.
+#### **`save_frame_as_png(frame, output_path, color_id, align_rgb=True)`**
+Saves a single frame as a PNG image with optional RGB channel alignment.
 
 - **Parameters**:
-  - `frame` (np.ndarray): A 2D array representing the image frame.
+  - `frame` (np.ndarray): A 2D Bayer-encoded or grayscale image frame.
   - `output_path` (str): Path where the PNG file will be saved.
+  - `color_id` (int): The SER color identifier describing the Bayer pattern.
+  - `align_rgb` (bool, optional): Align Red and Blue channels to Green. Defaults to `True`.
 - **Returns**:
   - None
 - **Usage**:
   ```python
-  save_frame_as_png(frame, "frame_output.png")
+  save_frame_as_png(frame, "frame_output.png", color_id=8, align_rgb=False)
   ```
 
 ---
