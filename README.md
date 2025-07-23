@@ -77,3 +77,23 @@ These functions work together to:
 
 See `examples/extract_frames_example.py` for a walkthrough of selecting a
 subset of frames from an existing SER file and saving them to a new file.
+
+---
+
+### **Installing Requirements and Running Tests**
+
+1. Install the project dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+   Using `opencv-python-headless` instead of `opencv-python` avoids needing
+   system libraries such as `libGL1`:
+   ```bash
+   pip install opencv-python-headless
+   ```
+
+2. Run the tests with [pytest](https://pytest.org):
+   ```bash
+   pytest
+   ```
+
