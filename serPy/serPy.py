@@ -124,7 +124,6 @@ def write_ser(output_path, metadata, frames, timestamps=None):
     """
     # Define the header structure based on the specification
     header_format = "<14sIIIIIII40s40s40s8s8s"
-    header_size = struct.calcsize(header_format)
 
     # Validate metadata
     if "file_id" not in metadata or metadata["file_id"] != "LUCAM-RECORDER":
@@ -134,15 +133,13 @@ def write_ser(output_path, metadata, frames, timestamps=None):
     frame_height = metadata["image_height"]
     frame_width = metadata["image_width"]
     pixel_depth = metadata["pixel_depth"]
-    color_id = metadata["color_id"]
     frame_count = metadata["frame_count"]
 
     if len(frames) != frame_count:
         raise ValueError("Number of frames does not match frame_count in metadata.")
 
-    # Calculate frame size
+    # Determine the data type for writing frame bytes
     dtype = np.uint8 if pixel_depth == 8 else np.uint16
-    frame_size = frame_width * frame_height * (pixel_depth // 8)
 
     # Open the output file
     with open(output_path, "wb") as ser_file:
